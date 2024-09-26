@@ -1,0 +1,15 @@
+(ns tests.basilex-pygame.demo-test
+  (:require [clojure.test :refer [deftest is use-fixtures]]
+            [basilex-pygame.demo :as d])
+  (:import pygame))
+
+(defn setup []
+  (pygame/init)
+  (yield)
+  (pygame/quit))
+
+(use-fixtures :each setup)
+
+(deftest inputs-test
+  ;; dummy test
+  (is (= [1.0 2.0] (d/handle-input 1.0 2.0 5))))

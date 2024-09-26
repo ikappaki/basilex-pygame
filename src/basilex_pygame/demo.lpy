@@ -1,0 +1,63 @@
+(ns basilex-pygame.demo
+  (:import pygame))
+
+(defn init
+  [width height caption]
+
+  (pygame/init)
+  (let [surface (pygame.display/set-mode [width height])]
+    (pygame.display/set-caption caption)
+    surface))
+  
+(defn handle-input [rect-x rect-y rect-speed]
+  (let [ks (pygame.key/get-pressed)]
+    (cond-> [rect-x rect-y]
+      (aget ks pygame/K-LEFT)
+      (update 0 - rect-speed)
+      (aget ks pygame/K-RIGHT)
+      (update 0 + rect-speed)
+      (aget ks pygame/K-UP)
+      (update 1 - rect-speed)
+      (aget ks pygame/K-DOWN)
+      (update 1 + rect-speed))))
+
+(defn game-loop [surface]
+  (let [white [255 255 255]
+        red [255 0 0]
+        rect-speed 5
+        quit?* (volatile! false)]
+
+    (loop [rect-x 50
+           rect-y 50]
+      (.fill surface white)
+
+      ;; Event handling
+      (let [events (pygame.event/get)]
+        (doseq [event events]
+                    (when (= (. event -type) pygame/QUIT)
+                      (pygame/quit)
+                      (vreset! quit?* true)))
+
+        (when-not @quit?*
+          (let [[rect-x-up rect-y-up] (handle-input rect-x rect-y rect-speed)]
+
+            (pygame.draw/rect surface red [rect-x-up rect-y-up 50 50])
+
+            ;; Refresh the surface
+            (pygame.display/flip)
+
+            ;; Add a small delay to control frame rate
+            (pygame.time/delay 30)
+
+            (recur rect-x-up rect-y-up)))))))
+
+(defn run []
+  (let [surface (init 400 300 "Basilisp pygame moving cube demo")]
+    (game-loop surface)))
+
+;; evaluate in NREPL to run the demo
+#_(run)
+
+;; only start if invoked from the command line.
+(when (= *main-ns* 'basilex-pygame.demo) 
+  (run))
