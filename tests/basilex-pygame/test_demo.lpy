@@ -1,4 +1,4 @@
-(ns tests.basilex-pygame.demo-test
+(ns tests.basilex-pygame.test-demo
   (:require [clojure.test :refer [deftest is use-fixtures]]
             [basilex-pygame.demo :as d])
   (:import pygame))
