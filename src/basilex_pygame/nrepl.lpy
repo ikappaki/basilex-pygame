@@ -1,0 +1,33 @@
+(ns basilex-pygame.nrepl
+  "Provides an interface to manage an asynchronous nREPL server
+  instance, enabling cooperative multitasking between the application
+  and client requests."
+  (:require [basilisp-nrepl-async.nrepl-server :as nra]))
+
+;; The instance of the running async server
+(defonce server-async* (atom nil))
+
+(defn server-start!
+  "Starts the asynchronous nREPL server and saves the instance to
+  `server-async*`. Throws an exception if there is an error or if
+  the server is already running."
+  []
+  (if @server-async*
+    (throw (Exception (str [:nrepl-server-async-error :already-started])))
+
+    (let [{:keys [error] :as server} (nra/start-server! {:async? true})]
+      (when error (throw (Exception error)))
+      (reset! server-async* server)
+      server)))
+
+(defn server-work-do!
+  "Evaluates all pending client requests for the `server-async*` if
+  the server is running. "
+  []
+  (let [server-async @server-async*]
+    (when server-async
+      (let [work-fn (:work-fn server-async)]
+        (work-fn)))))
+
+#_(server-start!)
+

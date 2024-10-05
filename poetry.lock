@@ -42,6 +42,24 @@ pygments = ["pygments (>=2.9.0,<3.0.0)"]
 pytest = ["pytest (>=7.0.0,<9.0.0)"]
 
 [[package]]
+name = "basilisp-nrepl-async"
+version = "0.1.1a0"
+description = ""
+optional = false
+python-versions = "^3.8"
+files = []
+develop = false
+
+[package.dependencies]
+basilisp = "^0.2.4"
+
+[package.source]
+type = "git"
+url = "https://github.com/ikappaki/basilisp-nrepl-async.git"
+reference = "HEAD"
+resolved_reference = "71304ee7fb7f859fee1e6b047b07a46982eeefbd"
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -308,4 +326,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "c3467c0288671a84f759ecf5efe1d79249aaec06855ff326050a761b2607d0c9"
+content-hash = "74f3f39210237643e569bc1d113a80e1594f980a9d92f7bd122b75a2548cd7e4"

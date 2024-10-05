@@ -1,4 +1,5 @@
 (ns basilex-pygame.demo
+  (:require [basilex-pygame.nrepl :as nrepl])
   (:import pygame))
 
 (defn init
@@ -21,6 +22,13 @@
       (aget ks pygame/K-DOWN)
       (update 1 + rect-speed))))
 
+;; a global setting to demonstrate cooperative multitasking between
+;; the pygame's main loop and the nREPL server.
+(def rect-dim* (atom 50))
+;; evaluate on the nREPL to double and halve the rectangle size.
+#_(swap! rect-dim* * 2)
+#_(swap! rect-dim* quot 2)
+
 (defn game-loop [surface]
   (let [white [255 255 255]
         red [255 0 0]
@@ -31,17 +39,21 @@
            rect-y 50]
       (.fill surface white)
 
+      ;; cooperative multitasking between nREPL server and main loop.
+      (nrepl/server-work-do!)
+
       ;; Event handling
       (let [events (pygame.event/get)]
         (doseq [event events]
-                    (when (= (. event -type) pygame/QUIT)
-                      (pygame/quit)
-                      (vreset! quit?* true)))
+          (when (= (. event -type) pygame/QUIT)
+            (pygame/quit)
+            (vreset! quit?* true)))
 
         (when-not @quit?*
-          (let [[rect-x-up rect-y-up] (handle-input rect-x rect-y rect-speed)]
+          (let [rect-dim @rect-dim*
+                [rect-x-up rect-y-up] (handle-input rect-x rect-y rect-speed)]
 
-            (pygame.draw/rect surface red [rect-x-up rect-y-up 50 50])
+            (pygame.draw/rect surface red [rect-x-up rect-y-up rect-dim rect-dim])
 
             ;; Refresh the surface
             (pygame.display/flip)
@@ -55,9 +67,10 @@
   (let [surface (init 400 300 "Basilisp pygame moving cube demo")]
     (game-loop surface)))
 
-;; evaluate in NREPL to run the demo
-#_(run)
-
 ;; only start if invoked from the command line.
 (when (= *main-ns* 'basilex-pygame.demo) 
+
+  ;; start async nREPL server
+  (nrepl/server-start!)
+
   (run))

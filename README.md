@@ -1,4 +1,4 @@
-# Example Basilisp Project for getting started with `pygame`
+# Getting started with `pygame` on Basilisp
 
 ## Overview
 
@@ -10,16 +10,20 @@ The project uses the [Poetry](https://python-poetry.org/) tool to simplify Pytho
 
 ```
 .
+├── basilisp.edn             (B)
 ├── poetry.lock              (1)
 ├── pyproject.toml           (2)
 ├── src
 │   └── basilex_pygame       (N)
 │       └── demo.lpy         (3)
+│       └── nrepl.lpy        (4)
 └── tests
     └── __init__.py
     └── basilex_pygame       (N)
-        └── test_demo.lpy    (4)
+        └── test_demo.lpy    (5)
 ```
+
+🄑 An empty file indicating to Clojure-enabled editors that this is a Basilisp Project.
 
 🄝 The project's namespace.
 
@@ -29,7 +33,9 @@ The project uses the [Poetry](https://python-poetry.org/) tool to simplify Pytho
 
 ③ The `pygame` demo source code.
 
-④ A unit test for the demo code.
+④ An auxiliary namespace that facilitates access to the async nREPL server.
+
+⑤ A unit test for the demo code.
 
 ## Project Setup
 
@@ -55,38 +61,21 @@ To interact with Python code from Basilisp, you might want to familiarize yourse
 
 The following steps assume you are using the [`basilisp` CLI tool](https://basilisp.readthedocs.io/en/latest/cli.html) within the activated virtual environment.
 
-### Command Line
 To load the namespace and run the demo, use the `run -n` option
 
 ```shell
 basilisp run -n basilex-pygame.demo
-```
-
-### REPL
-Start a REPL and run the code interactively with
-```clojure
-$ basilisp repl
-basilisp.user=> (require '[basilex-pygame.demo :as d])
 pygame 2.6.0 (SDL 2.28.4, Python 3.11.4)
 Hello from the pygame community. https://www.pygame.org/contribute.html
-nil
-basilisp.user=> (d/run)
+nREPL server started on port 53666 on host 127.0.0.1 - nrepl://127.0.0.1:53666
 ```
 
-### nREPL Server
+This command will also start an asynchronous nREPL server bound to the local interface on a random port number. Additionally, it creates a `.nrepl-port` file in the current working, directory your favorite Clojure-enabled editor to discover the server.
 
-Start the nREPL server and connect to it using your favorite [Clojure enabled code editor](https://basilisp.readthedocs.io/en/latest/cli.html#start-an-nrepl-session). 
-This will create an `.nrepl-port` file that your editor can use to connect to the server on a random port
-```powershell
-> basilisp nrepl-server
-nREPL server started on port 57627 on host 127.0.0.1 - nrepl://127.0.0.1:57627
-```
+The async nREPL server is integrated within `pygame`'s main loop, enabling cooperative multitasking between the server and `pygame` on the same thread.
 
-Alternatively, you can specify the port explicitly
-```powershell
-> basilisp nrepl-server --port 9999
-nREPL server started on port 9999 on host 127.0.0.1 - nrepl://127.0.0.1:9999
-```
+> [!NOTE]
+> Using the core `basilisp nrepl-server` is discouraged, as it can cause crashes. This is because running the main loop and the nREPL server on separate threads is not supported by `pygame` or most Python libraries, which require single threaded executions.
 
 ## Testing
 
