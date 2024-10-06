@@ -2,3 +2,7 @@
 .nrepl-port
 __pycache__/
 .venv/
+
+/.calva
+/.clj-kondo
+/.lsp

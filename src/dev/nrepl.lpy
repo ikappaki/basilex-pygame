@@ -1,4 +1,4 @@
-(ns basilex-pygame.nrepl
+(ns dev.nrepl
   "Provides an interface to manage an asynchronous nREPL server
   instance, enabling cooperative multitasking between the application
   and client requests."

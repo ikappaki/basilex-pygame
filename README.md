@@ -14,8 +14,9 @@ The project uses the [Poetry](https://python-poetry.org/) tool to simplify Pytho
 ├── poetry.lock              (1)
 ├── pyproject.toml           (2)
 ├── src
-│   └── basilex_pygame       (N)
-│       └── demo.lpy         (3)
+│   ├── basilex_pygame       (N)
+│   │   └── demo.lpy         (3)
+│   └── dev
 │       └── nrepl.lpy        (4)
 └── tests
     └── __init__.py
@@ -33,7 +34,7 @@ The project uses the [Poetry](https://python-poetry.org/) tool to simplify Pytho
 
 ③ The `pygame` demo source code.
 
-④ An auxiliary namespace that facilitates access to the async nREPL server.
+④ An auxiliary namespace that facilitates access to the async nREPL server during development.
 
 ⑤ A unit test for the demo code.
 

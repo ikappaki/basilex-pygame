@@ -1,5 +1,5 @@
 (ns basilex-pygame.demo
-  (:require [basilex-pygame.nrepl :as nrepl])
+  (:require [dev.nrepl :as nrepl])
   (:import pygame))
 
 (defn init
